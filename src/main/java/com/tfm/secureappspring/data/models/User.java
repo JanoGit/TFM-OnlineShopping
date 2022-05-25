@@ -7,7 +7,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -25,7 +26,7 @@ public class User {
     private Integer id;
     @NotBlank
     @Email
-    @Column(unique = true)
+    @Column(name = "mail", length = 80, unique = true)
     private String mail;
     @NotBlank
     private String passwordHash;
@@ -34,6 +35,12 @@ public class User {
     private Role role;
     private String firstName;
     private String lastName;
+    @Column(name = "address", length = 45)
+    private String address;
     private LocalDateTime registrationDate;
+
+    @OneToMany(mappedBy = "tfmUsers")
+    @ToString.Exclude
+    private Set<Order> orders = new LinkedHashSet<>();
 
 }

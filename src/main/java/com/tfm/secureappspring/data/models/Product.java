@@ -5,7 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Objects;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Builder
 @Getter
@@ -22,21 +23,19 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Integer id;
     @NotBlank(message = "Product name has to be set")
-    private String item;
+    private String name;
     @PositiveOrZero(message = "Amount has to be equal or greater than zero")
     @Column(nullable = false)
     private double amount;
+    @Column(name = "price", nullable = false)
+    private Double price;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Objects.equals(id, product.id) && Double.compare(product.amount, amount) == 0 && item.equals(product.item);
-    }
+    @OneToMany(mappedBy = "products")
+    @ToString.Exclude
+    private Set<PurchasedProduct> purchasedProducts = new LinkedHashSet<>();
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+    @OneToMany(mappedBy = "products")
+    @ToString.Exclude
+    private Set<SupplyOrder> supplyOrders = new LinkedHashSet<>();
+
 }
