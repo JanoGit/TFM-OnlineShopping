@@ -1,4 +1,4 @@
-package com.tfm.secureappspring.services;
+/*package com.tfm.secureappspring.services;
 
 import com.tfm.secureappspring.data.models.Role;
 import com.tfm.secureappspring.data.models.User;
@@ -8,14 +8,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CSVHelper {
     public static String TYPE = "text/csv";
-    static String[] HEADERs = { "Id", "Mail", "Password", "FirstName", "LastName", "Role", "RegistrationDate" };
+    static String[] HEADERs = { "Id", "Mail", "Password", "Role", "FirstName", "LastName", "Address", "RegistrationDate" };
 
     public static boolean hasCSVFormat(MultipartFile file) {
         return TYPE.equals(file.getContentType())
@@ -36,10 +33,12 @@ public class CSVHelper {
                         Integer.getInteger(csvRecord.get("Id")),
                         csvRecord.get("Mail"),
                         csvRecord.get("Password"),
+                        Role.valueOf(csvRecord.get("Role")),
                         csvRecord.get("FirstName"),
                         csvRecord.get("LastName"),
-                        Role.valueOf(csvRecord.get("Role")),
-                        LocalDateTime.parse(csvRecord.get("RegistrationDate"))
+                        csvRecord.get("Address"),
+                        LocalDateTime.parse(csvRecord.get("RegistrationDate")),
+                        Set.of(csvRecord.get("Order"))
                 );
 
                 userList.add(user);
@@ -60,7 +59,7 @@ public class CSVHelper {
                 List<String> data = Arrays.asList(
                         String.valueOf(users.getId()),
                         users.getMail(),
-                        users.getPasswordHash(),
+                        users.getPassword(),
                         users.getFirstName(),
                         users.getLastName(),
                         users.getRole().toString(),
@@ -76,4 +75,4 @@ public class CSVHelper {
             throw new RuntimeException("fail to import data to CSV file: " + e.getMessage());
         }
     }
-}
+}*/

@@ -2,30 +2,32 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/Index}">
+      layout:decorate="~{Home}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Virtual Shop - Products</title>
 </head>
-<div layout:fragment="spa-container">
+<section layout:fragment="content">
     <h1 align="center">Product List</h1>
     <br>
     <table border="1" cellpadding="10">
         <thead>
         <tr>
             <th>Id</th>
-            <th>Email</th>
+            <th>Name</th>
             <th>Amount</th>
+            <th>Price</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="product : ${allProducts}">
+        <tr th:each="product : ${products}">
             <td th:text="${product.id}">Id</td>
-            <td th:text="${product.item}">Name</td>
+            <td th:text="${product.name}">Name</td>
             <td th:text="${product.amount}">Amount</td>
+            <td th:text="${product.price}">Price</td>
         </tr>
         </tbody>
     </table>
-</div>
+</section>
 </html>

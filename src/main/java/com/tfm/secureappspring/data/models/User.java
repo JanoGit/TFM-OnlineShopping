@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "tfm_users")
@@ -29,14 +29,18 @@ public class User {
     @Column(name = "mail", length = 80, unique = true)
     private String mail;
     @NotBlank
-    private String passwordHash;
+    @Column(name = "password_hash")
+    private String password;
     @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
+    @Column(name = "first_name", length = 45)
     private String firstName;
+    @Column(name = "last_name", length = 45)
     private String lastName;
     @Column(name = "address", length = 45)
     private String address;
+    @Column(name = "registration_date")
     private LocalDateTime registrationDate;
 
     @OneToMany(mappedBy = "tfmUsers")

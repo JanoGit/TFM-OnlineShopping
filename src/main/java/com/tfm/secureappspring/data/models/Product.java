@@ -13,20 +13,20 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Integer id;
     @NotBlank(message = "Product name has to be set")
     private String name;
     @PositiveOrZero(message = "Amount has to be equal or greater than zero")
     @Column(nullable = false)
-    private double amount;
+    private Integer amount;
     @Column(name = "price", nullable = false)
     private Double price;
 
