@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Products</title>
+</head>
+
+<section layout:fragment="content" class="container py-4 h-auto">
+    <h1 align="center">User List</h1>
+    <br>
+    <table border="1" cellpadding="10" align="center">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Mail</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Username</th>
+            <th>Enabled</th>
+            <th>Registration Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}">Mail</td>
+            <td th:text="${user.mail}">Mail</td>
+            <td th:text="${user.password}">Password</td>
+            <td th:text="${user.role}">Role</td>
+            <td th:text="${user.userName}">Username</td>
+            <td th:text="${user.enabled}">Enabled</td>
+            <td th:text="${user.registrationDate}">Registration Date</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+</html>

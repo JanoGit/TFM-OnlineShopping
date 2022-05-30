@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Products</title>
+</head>
+
+<section layout:fragment="content" class="container py-4 h-auto">
+    <div class="bg-dark text-light text-opacity-75 border border-2 border-primary" style="border-radius: 1rem;">
+        <div class="row border border-1 border-secondary rounded-3" style="margin: 5rem">
+            <p class="fs-5 fst-italic text-primary" align="center">
+                <img src="../images/LogoMiw.png" th:src="@{../images/LogoMiw.png}" alt="Logo MIW"
+                     class="px-3" style="height: 3rem">Log In
+            </p>
+
+            <div th:if="${param.error}">
+                Invalid mail and password.
+            </div>
+
+            <form id="login_form" th:action="@{/Users/Login}" th:object="${formUser}" method="post">
+                <fieldset>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="login_user_name">Mail:
+                            <input type="email" id="login_user_name" name="login_user_name"
+                                   placeholder="Mail of the User" th:field="*{mail}"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="login_user_password">Password:
+                            <input type="password" id="login_user_password" name="login_user_password"
+                                   placeholder="Password" th:field="*{password}"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <input type="submit" value="Log In"
+                               style="margin-left: 45%;margin-top: 5px;margin-bottom: 5px;width: 80px"/>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Products</title>
+</head>
+
+<section layout:fragment="content" class="container py-4 h-auto">
+    <div class="bg-dark text-light text-opacity-75 border border-2 border-primary" style="border-radius: 1rem;">
+        <div class="row border border-1 border-secondary rounded-3" style="margin: 5rem">
+            <p class="fs-5 fst-italic text-primary">
+                <img src="../images/LogoMiw.png" th:src="@{../images/LogoMiw.png}" alt="Logo MIW"
+                     class="px-3" style="height: 3rem">Logout
+            </p>
+
+            <form id="logout_form" th:action="@{/Users/Logout}" method="post">
+                <fieldset>
+                    <div class="row container-fluid">
+                        <button type="submit" value="Logout"
+                                style="margin-left: 45%;margin-top: 5px;margin-bottom: 10px;width: 80px">Logout
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+
+</html>

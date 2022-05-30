@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org">
 <div th:fragment="navbar">
     <header class="navbar-nav nav container-fluid">
         <nav class="container-fluid navbar navbar-expand-lg bg-dark" id="menu">
@@ -30,14 +31,14 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav nav justify-content-end" style="margin-left: auto">
-                        <li class="nav-item" id="li_register" style="display: contents">
-                            <a id="register" class="nav-link" href="#"><i class="fas fa-user-plus"></i>Registro</a>
+                        <li class="nav-item" id="li_register" sec:authorize="!isAuthenticated()">
+                            <a id="register" class="nav-link" th:href="@{~/Users/Register}"><i class="fas fa-user-plus"></i>Registro</a>
                         </li>
-                        <li class="nav-item" id="li_login" style="display: contents">
-                            <a id="login" class="nav-link" href="#"><i class="fas fa-sign-in-alt"></i>Login</a>
+                        <li class="nav-item" id="li_login" sec:authorize="!isAuthenticated()">
+                            <a id="login" class="nav-link" th:href="@{~/Users/Login}"><i class="fas fa-sign-in-alt"></i>Login</a>
                         </li>
-                        <li class="nav-item" id="li_logout" style="display: none">
-                            <a id="logout" class="nav-link" href="#"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                        <li class="nav-item" id="li_logout" sec:authorize="isAuthenticated()">
+                            <a id="logout" class="nav-link" th:href="@{~/Users/Logout}"><i class="fas fa-sign-out-alt"></i>Logout</a>
                         </li>
                     </ul>
                 </div>

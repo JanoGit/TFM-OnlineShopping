@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Products</title>
+</head>
+
+<section layout:fragment="content" class="container py-4 h-auto">
+    <div class="bg-dark text-light text-opacity-75 border border-2 border-primary" style="border-radius: 1rem;">
+        <div class="row border border-1 border-secondary rounded-3" style="margin: 5rem">
+            <p class="fs-5 fst-italic text-primary" align="center">
+                <img src="../images/LogoMiw.png" th:src="@{../images/LogoMiw.png}" alt="Logo MIW"
+                     class="px-3" style="height: 3rem">Register
+            </p>
+
+            <div th:if="${requiredFields}">
+                <p th:text="${requiredFields}"></p>
+            </div>
+
+            <div th:if="${passwordError}">
+                <p th:text="${passwordError}"></p>
+            </div>
+
+            <div th:if="${userExists}">
+                <p th:text="${userExists}"></p>
+            </div>
+
+            <form id="register_form" th:action="@{/Users/Register}" method="post">
+                <fieldset>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="register_user_mail">Mail:
+                            <input type="email" id="register_user_mail" name="register_user_mail"
+                                   placeholder="Mail of the User"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="register_user_name">User Name:
+                            <input type="text" id="register_user_name" name="register_user_name"
+                                   placeholder="User Name"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="register_user_password">Password:
+                            <input type="password" id="register_user_password" name="register_user_password"
+                                   placeholder="Password"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <label class="text-end" style="padding-right: 35%" for="repeated_register_user_password">Password:
+                            <input type="password" id="repeated_register_user_password" name="repeated_register_user_password"
+                                   placeholder="Password"
+                                   style="width: 300px">
+                        </label>
+                    </div>
+                    <div class="row container-fluid">
+                        <input type="submit" value="Register"
+                               style="margin-left: 45%;margin-top: 5px;margin-bottom: 5px;width: 80px"/>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</section>
+
+</html>

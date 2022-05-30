@@ -14,7 +14,7 @@ import java.util.Set;
 @ToString
 @Entity
 @Table(name = "order", indexes = {
-        @Index(name = "fk_order_tfm_users_idx", columnList = "tfm_users_id")
+        @Index(name = "fk_order_users_idx", columnList = "users_id")
 })
 public class Order {
     @Id
@@ -26,9 +26,9 @@ public class Order {
     private Double cost;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "tfm_users_id", nullable = false)
+    @JoinColumn(name = "users_id", nullable = false)
     @ToString.Exclude
-    private User tfmUsers;
+    private User users;
 
     @OneToMany(mappedBy = "order")
     @ToString.Exclude

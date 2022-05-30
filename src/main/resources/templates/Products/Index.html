@@ -11,18 +11,18 @@
 <section layout:fragment="content">
     <h1 align="center">Product List</h1>
     <br>
-    <table border="1" cellpadding="10">
+    <table border="1" cellpadding="10" align="center">
         <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
             <th>Amount</th>
             <th>Price</th>
+            <th>Details</th>
+            <th>Send to Cart</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="product : ${products}">
-            <td th:text="${product.id}">Id</td>
             <td th:text="${product.name}">Name</td>
             <td th:text="${product.amount}">Amount</td>
             <td th:text="${product.price}">Price</td>

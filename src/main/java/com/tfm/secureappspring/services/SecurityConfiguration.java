@@ -11,11 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+// @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -25,9 +28,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.jdbcAuthentication().dataSource(dataSource);
     }
 
     @Override
@@ -35,12 +39,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         /*http
                 .csrf().disable().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);*/
-        http.httpBasic().disable();
-        http.formLogin().disable();
+        http
+                /*.authorizeRequests()
+                    .antMatchers("/", "/Home", "/Index")
+                    .permitAll()
+                    .and()*/
+                .authorizeRequests()
+                    .anyRequest()
+                    .permitAll()
+                    .and()
+                .formLogin()
+                    .loginPage("/Users/Login")
+                    .loginProcessingUrl("/Users/Login")
+                    .failureUrl("/Users/Login?error")
+                    .successForwardUrl("/Users/Logout")
+                    .usernameParameter("mail")
+                    .passwordParameter("password")
+                    .permitAll()
+                    .and()
+                .logout()
+                    .logoutUrl("/Users/Logout")
+                    .logoutSuccessUrl("/Users/Login")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .and();
+                /*.authorizeRequests()
+                    .anyRequest()
+                    .authenticated();*/
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 }

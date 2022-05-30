@@ -15,10 +15,9 @@ import java.util.Set;
 @Setter
 @ToString
 @RequiredArgsConstructor
-//@NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tfm_users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,21 +28,22 @@ public class User {
     @Column(name = "mail", length = 80, unique = true)
     private String mail;
     @NotBlank
-    @Column(name = "password_hash")
     private String password;
     @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(name = "first_name", length = 45)
-    private String firstName;
+    @NotBlank
+    @Column(name = "username", length = 45)
+    private String userName;
     @Column(name = "last_name", length = 45)
     private String lastName;
     @Column(name = "address", length = 45)
     private String address;
     @Column(name = "registration_date")
     private LocalDateTime registrationDate;
+    private Boolean enabled;
 
-    @OneToMany(mappedBy = "tfmUsers")
+    @OneToMany(mappedBy = "users")
     @ToString.Exclude
     private Set<Order> orders = new LinkedHashSet<>();
 
