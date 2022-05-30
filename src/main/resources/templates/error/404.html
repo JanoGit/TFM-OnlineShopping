@@ -1,11 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Error Page 404</title>
-    <link href="css/404.css" rel="stylesheet"/>
+    <style>
+        h1.four-0-four-msg, h2.four-0-four-msg{
+            text-align: center;
+            text-transform: capitalize;
+            color: #383838;
+        }
+        h3.four-0-four-msg{
+            text-align: center;
+            text-transform: capitalize;
+        }
+    </style>
 </head>
 <body>
-<img src="images/404.png" class="four-0-four-image" alt="">
-<p class="four-0-four-msg">look like you are lost. Head back to our <a href="/Home">home page</a></p>
+    <h1 class="four-0-four-msg">Status Code 404</h1>
+    <h2 class="four-0-four-msg">Look like you are lost. Head back to our</h2>
+    <h3 class="four-0-four-msg"><a style="color: blue" href="/Home" th:href="@{/Home}">Home Page</a></h3>
 </body>
 </html>
