@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{Home}">
 <head>
@@ -11,6 +12,10 @@
 <section layout:fragment="content">
     <h1 align="center">Product List</h1>
     <br>
+    <p sec:authorize="hasRole('ADMIN')" align="center">
+        <a th:href="@{/Products/Add}">Add new Product</a>
+    </p>
+    <br>
     <table border="1" cellpadding="10" align="center">
         <thead>
         <tr>
@@ -19,6 +24,8 @@
             <th>Price</th>
             <th>Details</th>
             <th>Send to Cart</th>
+            <th sec:authorize="hasRole('ADMIN')">Edit/Delete Product</th>
+            <th sec:authorize="hasRole('ADMIN')">TODO: Supply Order implementation</th>
         </tr>
         </thead>
         <tbody>
@@ -26,6 +33,11 @@
             <td th:text="${product.name}">Name</td>
             <td th:text="${product.amount}">Amount</td>
             <td th:text="${product.price}">Price</td>
+            <td><a th:href="@{/Products/Details/{id}(id = ${product.id})}">Details</a></td>
+            <td>smth for cart</td>
+            <!--<td><a th:href="@{/ShoppingCart/Add/{id}(id = ${product.id})">Add to Shopping Cart</a></td>-->
+            <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/Products/Edit/{id}(id = ${product.id})}">Edit/Delete Product</a></td>
+            <!--<td sec:authorize="hasRole('ADMIN')"><a th:href="@{/SupplyOrders/???/{id}(id = ${product.id})}">???? Supply Order</a></td>-->
         </tr>
         </tbody>
     </table>

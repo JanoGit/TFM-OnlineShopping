@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Delete Product</title>
+</head>
+<section layout:fragment="content">
+    <h1 align="center">Delete Product</h1>
+    <br>
+    <h3 align="center" style="color: red">Are you sure you want to delete this?</h3>
+    <hr>
+    <dl style="margin-left: 40px">
+        <dt>Product Name</dt>
+        <dd th:text="${product.name}">Product Name</dd>
+        <dt>Amount</dt>
+        <dd th:text="${product.amount}">Amount</dd>
+        <dt>Price</dt>
+        <dd th:text="${product.price}">Price</dd>
+        <!-- TODO: <dt sec:authorize="hasRole('ADMIN')">Supply Order</dt>
+              <dd sec:authorize="hasRole('ADMIN')" th:text="${product.supplyOrders}">Supply Orders</dd>-->
+    </dl>
+    <form id="delete_product" th:action="@{/Products/Delete/{id}(id = ${product.id})}" method="post" th:object="${product}">
+        <div class="row container-fluid">
+            <input type="submit" value="Delete" class="btn btn-danger"
+                   style="margin-left: 25px;margin-top: 5px;margin-bottom: 5px;width: 80px"/>
+        </div>
+    </form>
+    <hr>
+    <p style="margin-left: 40px">
+        <a th:href="@{~/Products/Index}">Product Index</a>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/Products/Edit/{id}(id = ${product.id})}"> | Edit/Delete Product</a>
+    </p>
+</section>
+</html>

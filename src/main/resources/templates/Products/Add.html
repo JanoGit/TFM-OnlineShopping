@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Virtual Shop - Edit Product</title>
+</head>
+<section layout:fragment="content">
+    <h1 align="center">Edit Product</h1>
+    <br>
+    <hr>
+
+    <div th:if="${#fields.errors('product.*')}">
+        <ul>
+            <li th:each="err : ${#fields.errors('product.*')}" th:text="${err}" style="color: red"></li>
+        </ul>
+    </div>
+
+    <div align="center">
+        <form id="add_product" th:action="@{/Products/Add}" method="post" th:object="${product}">
+            <fieldset>
+                <div class="row container-fluid">
+                    <label class="text-end" style="padding-right: 35%" for="product_name">Name:
+                        <input type="text" required id="product_name" name="product_name" th:field="${product.name}"
+                               style="width: 300px; margin-left: 15px">
+                    </label>
+                </div>
+                <div class="row container-fluid">
+                    <label class="text-end" style="padding-right: 35%" for="product_amount">Amount:
+                        <input type="number" required id="product_amount" name="product_amount" th:field="${product.amount}"
+                               style="width: 300px; margin-left: 15px">
+                    </label>
+                </div>
+                <div class="row container-fluid">
+                    <label class="text-end" style="padding-right: 35%" for="product_price">Price:
+                        <input type="number" required step="0.01" id="product_price" name="product_price" th:field="${product.price}"
+                               style="width: 300px; margin-left: 15px">
+                    </label>
+                </div>
+                <div class="row container-fluid">
+                    <input type="submit" value="Add" class="btn btn-success"
+                           style="margin-left: 50%;margin-top: 5px;margin-bottom: 5px;width: 80px"/>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <hr>
+    <p align="center">
+        <a th:href="@{~/Products/Index}">Product Index</a>
+    </p>
+</section>
+</html>

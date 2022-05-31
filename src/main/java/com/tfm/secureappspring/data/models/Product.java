@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,10 +25,11 @@ public class Product {
     private Integer id;
     @NotBlank(message = "Product name has to be set")
     private String name;
+    @NotNull(message = "Amount has to be equal or greater than zero")
     @PositiveOrZero(message = "Amount has to be equal or greater than zero")
-    @Column(nullable = false)
     private Integer amount;
-    @Column(name = "price", nullable = false)
+    @NotNull(message = "Price has to be equal or greater than zero")
+    @PositiveOrZero(message = "Price has to be equal or greater than zero")
     private Double price;
 
     @OneToMany(mappedBy = "products")

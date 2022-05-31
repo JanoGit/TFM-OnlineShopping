@@ -31,7 +31,7 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/Index")
-    public String showUsersList(Model model) {
+    public String index(Model model) {
         List<User> users = userRepository.findAll();
         model.addAttribute("users", users);
 
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/Login")
-    public String showLoginPage(Model model) {
+    public String login(Model model) {
         if (model.containsAttribute("registeredUser")) {
             User registeredUser = (User) model.getAttribute("registeredUser");
             model.addAttribute("formUser", registeredUser);
@@ -51,13 +51,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/Logout", method = {RequestMethod.GET, RequestMethod.POST})
-    public String showLogoutPage() {
+    public String logout() {
         return "Users/Logout";
     }
 
 
     @GetMapping(value = "/Register")
-    public String showRegisterPage() {
+    public String register() {
 
         return "Users/Register";
     }
