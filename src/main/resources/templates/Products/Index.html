@@ -30,7 +30,10 @@
         <a th:href="@{/Products/Add}">Add new Product</a>
     </p>
     <br>
-    <table border="1" cellpadding="10" align="center">
+    <div th:if="${product404}">
+        Product with name: <p th:utext="${product404}"></p> not found
+    </div>
+    <table border="1" cellpadding="10" align="center" th:if="${products}">
         <thead>
         <tr>
             <th>Name</th>

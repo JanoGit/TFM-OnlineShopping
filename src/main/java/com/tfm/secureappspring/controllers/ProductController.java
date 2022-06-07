@@ -58,7 +58,7 @@ public class ProductController {
     }*/
 
     @GetMapping(value = "/Details")
-    public String details(@RequestParam(required = false) String id, Model model, RedirectAttributes redirectAttributes) {
+    public String detailsSql(@RequestParam(required = false) String id, Model model, RedirectAttributes redirectAttributes) {
         Object[] product = entityManager
                 .createNativeQuery("SELECT * FROM products WHERE id = " + id).getResultList().toArray();
         model.addAttribute("product", product);
@@ -171,6 +171,12 @@ public class ProductController {
         // List<Product> products = entityManager.createQuery(jpql, Product.class).getResultList();
         List<Object[]> productsArray = entityManager
                 .createNativeQuery("SELECT * FROM products WHERE name LIKE '%" + name + "%'").getResultList();
+        if (productsArray.isEmpty()) {
+            model.addAttribute("product404", name);
+
+            return "Products/Index";
+        }
+
         List<Product> products = new ArrayList<>();
         for (Object[] objects : productsArray) {
             Product product = new Product();
