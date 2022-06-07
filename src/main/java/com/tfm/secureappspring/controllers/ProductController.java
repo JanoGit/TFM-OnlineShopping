@@ -3,17 +3,18 @@ package com.tfm.secureappspring.controllers;
 import com.tfm.secureappspring.data.models.Product;
 import com.tfm.secureappspring.data.daos.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/Products")
@@ -25,6 +26,8 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    EntityManager entityManager;
 
     @GetMapping(value = "/Index")
     public String index(Model model) {
@@ -34,7 +37,7 @@ public class ProductController {
         return "Products/Index";
     }
 
-    @GetMapping(value = "/Details/{id}")
+    /*@GetMapping(value = "/Details/{id}")
     public String details(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
             redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
@@ -52,6 +55,15 @@ public class ProductController {
         model.addAttribute("product", product);
 
         return "Products/Details";
+    }*/
+
+    @GetMapping(value = "/Details")
+    public String details(@RequestParam(required = false) String id, Model model, RedirectAttributes redirectAttributes) {
+        Object[] product = entityManager
+                .createNativeQuery("SELECT * FROM products WHERE id = " + id).getResultList().toArray();
+        model.addAttribute("product", product);
+
+        return "Products/DetailsSql";
     }
 
     @Secured("ROLE_ADMIN")
@@ -151,5 +163,25 @@ public class ProductController {
         model.addAttribute("product", product);
 
         return "redirect:/Products/Index";
+    }
+
+    @GetMapping(value = "Search")
+    public String search(@RequestParam(required = false) String name, Model model) {
+        // String jpql = "FROM Product WHERE name LIKE '%" + name + "%'";
+        // List<Product> products = entityManager.createQuery(jpql, Product.class).getResultList();
+        List<Object[]> productsArray = entityManager
+                .createNativeQuery("SELECT * FROM products WHERE name LIKE '%" + name + "%'").getResultList();
+        List<Product> products = new ArrayList<>();
+        for (Object[] objects : productsArray) {
+            Product product = new Product();
+            product.setId((Integer) objects[0]);
+            product.setName((String) objects[1]);
+            product.setAmount((Integer) objects[2]);
+            product.setPrice((Double) objects[3]);
+            products.add(product);
+        }
+        model.addAttribute("products", products);
+
+        return "Products/Index";
     }
 }
