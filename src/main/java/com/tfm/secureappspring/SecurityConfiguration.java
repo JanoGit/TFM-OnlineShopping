@@ -1,4 +1,4 @@
-package com.tfm.secureappspring.services;
+package com.tfm.secureappspring;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -14,7 +14,6 @@ import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/Products")
@@ -58,7 +57,7 @@ public class ProductController {
     }*/
 
     @GetMapping(value = "/Details")
-    public String detailsSql(@RequestParam(required = false) String id, Model model, RedirectAttributes redirectAttributes) {
+    public String detailsSql(@RequestParam(required = false) String id, Model model) {
         Object[] product = entityManager
                 .createNativeQuery("SELECT * FROM products WHERE id = " + id).getResultList().toArray();
         model.addAttribute("product", product);
@@ -167,8 +166,6 @@ public class ProductController {
 
     @GetMapping(value = "Search")
     public String search(@RequestParam(required = false) String name, Model model) {
-        // String jpql = "FROM Product WHERE name LIKE '%" + name + "%'";
-        // List<Product> products = entityManager.createQuery(jpql, Product.class).getResultList();
         List<Object[]> productsArray = entityManager
                 .createNativeQuery("SELECT * FROM products WHERE name LIKE '%" + name + "%'").getResultList();
         if (productsArray.isEmpty()) {

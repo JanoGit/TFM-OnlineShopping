@@ -1,4 +1,4 @@
-package com.tfm.secureappspring.services;
+package com.tfm.secureappspring;
 
 import com.tfm.secureappspring.data.daos.UserRepository;
 import com.tfm.secureappspring.data.models.Role;

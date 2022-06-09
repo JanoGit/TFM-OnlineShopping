@@ -52,8 +52,7 @@
             <td th:text="${product.price}">Price</td>
             <!--<td><a th:href="@{/Products/Details/{id}(id = ${product.id})}">Details</a></td>-->
             <td><a th:href="@{/Products/Details(id = ${product.id})}">Details</a></td>
-            <td>smth for cart</td>
-            <!--<td><a th:href="@{/ShoppingCart/Add/{id}(id = ${product.id})">Add to Shopping Cart</a></td>-->
+            <td><a th:href="@{/Cart/Add/{id}(id = ${product.id})}">Add to Shopping Cart</a></td>
             <td sec:authorize="hasRole('ADMIN')"><a th:href="@{/Products/Edit/{id}(id = ${product.id})}">Edit/Delete Product</a></td>
             <!--<td sec:authorize="hasRole('ADMIN')"><a th:href="@{/SupplyOrders/???/{id}(id = ${product.id})}">???? Supply Order</a></td>-->
         </tr>
