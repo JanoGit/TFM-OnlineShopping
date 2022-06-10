@@ -12,6 +12,9 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value = "SELECT * FROM tfmdb.order", nativeQuery = true)
     List<Order> getAll();
 
+    @Query(value = "SELECT * FROM tfmdb.order WHERE id = ?", nativeQuery = true)
+    Order getOneById(Integer id);
+
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO tfmdb.order (id, cost, user_id) VALUES (?, ?, ?)", nativeQuery = true)

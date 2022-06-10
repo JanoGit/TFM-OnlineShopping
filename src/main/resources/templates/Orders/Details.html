@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{Home}">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Virtual Shop - Product Details</title>
+</head>
+<section layout:fragment="content">
+  <h1 align="center">Product Details</h1>
+  <br>
+  <hr>
+  <dl style="margin-left: 40px">
+    <div>
+      <dt>User Name</dt>
+      <dd th:text="${order.user.userName}">User Name</dd>
+      <dt>Order Cost</dt>
+      <dd th:text="${order.cost}">Cost</dd>
+    </div>
+    <div th:each="purchasedProduct : ${order.purchasedProducts}" style="margin-top: 20px; margin-left: 60px">
+      <dt>Product:</dt>
+      <dd th:text="${purchasedProduct.product.name}">Name</dd>
+      <dt>Price</dt>
+      <dd th:text="${purchasedProduct.product.price}">Price</dd>
+      <dt>Quantity</dt>
+      <dd th:text="${purchasedProduct.quantity}">Name</dd>
+    </div>
+  </dl>
+  <hr>
+  <p style="margin-left: 40px">
+    <a th:href="@{~/Orders/Index}">Product Index</a>
+  </p>
+</section>
+</html>

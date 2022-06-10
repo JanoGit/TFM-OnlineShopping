@@ -18,9 +18,9 @@ public class DatabaseSeeder {
     private final ProductRepository productRepository;
     private final PurchasedProductRepository purchasedProductRepository;
     private final OrderRepository orderRepository;
-    private static final String MAIL = "admin@admin.com";
-    private static final String PASSWORD = "admin";
-    private static final String USERNAME = "admin";
+    private static final String ADMIN_MAIL = "admin@admin.com";
+    private static final String ADMIN_PASSWORD = "admin";
+    private static final String ADMIN_USERNAME = "admin";
 
     @Autowired
     public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository,
@@ -49,8 +49,15 @@ public class DatabaseSeeder {
     void initialize() {
         LogManager.getLogger(this.getClass()).warn("------- Finding Admin -----------");
         if (this.userRepository.findByRoleIn(List.of(Role.ADMIN)).isEmpty()) {
-            User user = User.builder().id(1).mail(MAIL).password(PASSWORD) // new BCryptPasswordEncoder().encode(PASSWORD)
-                    .role(Role.ADMIN).userName(USERNAME).enabled(Boolean.TRUE).registrationDate(LocalDateTime.now()).build();
+            User user = User.builder()
+                    .id(1)
+                    .mail(ADMIN_MAIL)
+                    .password(ADMIN_PASSWORD) // new BCryptPasswordEncoder().encode(PASSWORD)
+                    .role(Role.ADMIN)
+                    .userName(ADMIN_USERNAME)
+                    .enabled(Boolean.TRUE)
+                    .registrationDate(LocalDateTime.now())
+                    .build();
             this.userRepository.save(user);
             LogManager.getLogger(this.getClass()).warn("------- Created Admin -----------");
         }
@@ -64,5 +71,17 @@ public class DatabaseSeeder {
         };
         this.productRepository.saveAll(Arrays.asList(products));
         LogManager.getLogger(this.getClass()).warn("        ------- products");
+        User[] users = {
+                User.builder()
+                        .id(2)
+                        .mail("prueba@prueba.com")
+                        .password("prueba")
+                        .role(Role.CUSTOMER)
+                        .userName("prueba")
+                        .enabled(Boolean.TRUE)
+                        .registrationDate(LocalDateTime.now())
+                        .build()
+        };
+        this.userRepository.saveAll(Arrays.asList(users));
     }
 }
