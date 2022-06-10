@@ -14,7 +14,6 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Embeddable
 public class SupplyOrderId implements Serializable {
     private static final long serialVersionUID = 5191013200367644412L;

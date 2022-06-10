@@ -12,7 +12,6 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 //@NoArgsConstructor
 @AllArgsConstructor
@@ -32,12 +31,10 @@ public class Product {
     @PositiveOrZero(message = "Price has to be equal or greater than zero")
     private Double price;
 
-    @OneToMany(mappedBy = "products")
-    @ToString.Exclude
+    @OneToMany(mappedBy = "product")
     private Set<PurchasedProduct> purchasedProducts = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "products")
-    @ToString.Exclude
     private Set<SupplyOrder> supplyOrders = new LinkedHashSet<>();
 
 }

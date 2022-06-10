@@ -11,10 +11,9 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "order", indexes = {
-        @Index(name = "fk_order_users_idx", columnList = "users_id")
+        @Index(name = "fk_order_users_idx", columnList = "user_id")
 })
 public class Order {
     @Id
@@ -25,13 +24,11 @@ public class Order {
     @Column(name = "cost", nullable = false)
     private Double cost;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "users_id", nullable = false)
-    @ToString.Exclude
-    private User users;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = User.class)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "order")
-    @ToString.Exclude
     private Set<PurchasedProduct> purchasedProducts = new LinkedHashSet<>();
 
 }

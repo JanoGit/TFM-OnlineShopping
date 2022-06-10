@@ -9,7 +9,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "supply_orders", indexes = {
         @Index(name = "fk_supply_orders_products_idx", columnList = "products_id")
@@ -21,7 +20,6 @@ public class SupplyOrder {
     @MapsId("productsId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "products_id", nullable = false)
-    @ToString.Exclude
     private Product products;
 
 }

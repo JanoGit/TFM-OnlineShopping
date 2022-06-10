@@ -11,6 +11,9 @@
 <section layout:fragment="content">
   <h1 align="center">Cart List</h1>
   <hr>
+  <div th:if="${errorAmount}" align="center" style="color: red">
+    <p th:text="${errorAmount}"></p>
+  </div>
   <table border="1" cellpadding="10" align="center" th:if="${products}">
     <thead>
     <tr>
@@ -32,11 +35,11 @@
     </tr>
     </tbody>
   </table>
-  <!--<form id="buy_cart" action="/Cart/Buy" method="post">
+  <form id="buy_cart" th:action="@{/Cart/Buy}" action="/Cart/Buy" method="post" th:if="${products}">
     <div class="row container-fluid">
       <input type="submit" value="Buy" class="btn btn-success"
              style="margin-left: 50%;margin-top: 5px;margin-bottom: 5px;width: 80px"/>
     </div>
-  </form>-->
+  </form>
 </section>
 </html>

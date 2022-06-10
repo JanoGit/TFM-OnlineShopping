@@ -1,14 +1,19 @@
 package com.tfm.secureappspring.controllers;
 
+import com.tfm.secureappspring.data.daos.OrderRepository;
 import com.tfm.secureappspring.data.daos.ProductRepository;
+import com.tfm.secureappspring.data.daos.PurchasedProductRepository;
+import com.tfm.secureappspring.data.daos.UserRepository;
+import com.tfm.secureappspring.data.models.Order;
 import com.tfm.secureappspring.data.models.Product;
+import com.tfm.secureappspring.data.models.PurchasedProduct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -18,11 +23,17 @@ import static java.util.stream.Collectors.groupingBy;
 
 @Controller
 @SessionAttributes("cart")
-@RequestMapping(value = "Cart")
+@RequestMapping(value = "/Cart")
 public class CartController {
     List<Product> cart;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PurchasedProductRepository purchasedProductRepository;
+    @Autowired
+    private OrderRepository orderRepository;
     private final String HTTP_STATUS_KEY = "httpStatus";
     private final String HTTP_STATUS_400 = "400";
     private final String HTTP_STATUS_REASON_PHRASE_KEY = "httpStatus.reasonPhrase";
@@ -34,14 +45,7 @@ public class CartController {
         if (this.cart == null) {
             return "Cart/Index";
         }
-        Map<Integer, List<Product>> productsMap = this.cart.stream().collect(groupingBy(Product::getId));
-        Map<Integer, Product> products = new HashMap<>();
-
-        for (Map.Entry<Integer, List<Product>> entry : productsMap.entrySet()) {
-            Integer purchasedAmount = entry.getValue().size();
-            entry.getValue().get(0).setAmount(purchasedAmount);
-            products.put(entry.getKey(), entry.getValue().get(0));
-        }
+        Map<Integer, Product> products = this.groupByIdAndTransformToMapWithPurchasedAmountOfEachProductStoredInFieldAmountOfProduct(this.cart);
         model.addAttribute("products", products);
 
         return "Cart/Index";
@@ -94,5 +98,61 @@ public class CartController {
         model.addAttribute("cart", this.cart);
 
         return "redirect:/Cart/Index";
+    }
+
+    @PostMapping(value = "/Buy")
+    public String buy(HttpSession httpSession, RedirectAttributes redirectAttributes) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getPrincipal().equals("anonymousUser") ||
+                auth.getAuthorities().stream().anyMatch(grantedAuthority ->
+                        grantedAuthority.getAuthority().equalsIgnoreCase("ROLE_ANONYMOUS"))) {
+            return "redirect:/Users/Login";
+        }
+        this.cart = (List<Product>) httpSession.getAttribute("cart");
+        if (this.cart == null) {
+            return "Cart/Index";
+        }
+        List<Order> orders = this.orderRepository.findAll();
+        orders.sort(Comparator.comparing(Order::getId).reversed());
+        Map<Integer, Product> shoppingCart = this.groupByIdAndTransformToMapWithPurchasedAmountOfEachProductStoredInFieldAmountOfProduct(this.cart);
+        Order order = new Order();
+        Integer orderId = orders.isEmpty() ? 1 : (orders.get(0).getId() + 1);
+        order.setId(orderId);
+        order.setCost(0.0);
+        User user = (User) auth.getPrincipal();
+        order.setUser(this.userRepository.findUserByMail(user.getUsername()));
+        //this.orderRepository.save(order);
+        for (Map.Entry<Integer, Product> entry : shoppingCart.entrySet()) {
+            if (this.productRepository.getById(entry.getKey()).getAmount() < entry.getValue().getAmount()) {
+                redirectAttributes.addFlashAttribute("errorAmount", "Amount selected of " +
+                        entry.getValue().getName() + " is over the current stock.");
+            }
+            Product p = this.productRepository.getById(entry.getKey());
+            PurchasedProduct purchasedProduct = PurchasedProduct.builder()
+                    .product(p)
+                    .quantity(entry.getValue().getAmount())
+                    .order(order)
+                    .build();
+            this.purchasedProductRepository.save(purchasedProduct);
+            p.setAmount(p.getAmount() - entry.getValue().getAmount());
+            this.productRepository.save(p);
+            order.setCost(order.getCost() + entry.getValue().getAmount() * entry.getValue().getPrice());
+        }
+        this.orderRepository.save(order);
+
+        return "redirect:/Cart/Index";
+    }
+
+    private Map<Integer, Product> groupByIdAndTransformToMapWithPurchasedAmountOfEachProductStoredInFieldAmountOfProduct(
+            List<Product> sessionCart) {
+        Map<Integer, List<Product>> productsMap = sessionCart.stream().collect(groupingBy(Product::getId));
+        Map<Integer, Product> shoppingCart = new HashMap<>();
+
+        for (Map.Entry<Integer, List<Product>> entry : productsMap.entrySet()) {
+            Integer purchasedAmount = entry.getValue().size();
+            entry.getValue().get(0).setAmount(purchasedAmount);
+            shoppingCart.put(entry.getKey(), entry.getValue().get(0));
+        }
+        return shoppingCart;
     }
 }

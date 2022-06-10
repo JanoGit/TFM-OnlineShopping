@@ -13,7 +13,6 @@ import java.util.Set;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -43,8 +42,7 @@ public class User {
     private LocalDateTime registrationDate;
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "users")
-    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
     private Set<Order> orders = new LinkedHashSet<>();
 
 }
