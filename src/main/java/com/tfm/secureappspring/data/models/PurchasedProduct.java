@@ -15,16 +15,20 @@ import javax.persistence.*;
         @Index(name = "fk_purchased_product_order_idx", columnList = "order_id")
 })
 public class PurchasedProduct {
-    @EmbeddedId
-    private PurchasedProductId id;
+    /*@EmbeddedId
+    private PurchasedProductId id;*/
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-    @MapsId("productId")
+    //@MapsId("productId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @MapsId("orderId")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    //@MapsId("orderId")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = Order.class)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 

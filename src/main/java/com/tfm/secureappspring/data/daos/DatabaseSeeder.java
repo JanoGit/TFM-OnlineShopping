@@ -16,14 +16,19 @@ public class DatabaseSeeder {
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final PurchasedProductRepository purchasedProductRepository;
+    private final OrderRepository orderRepository;
     private static final String MAIL = "admin@admin.com";
     private static final String PASSWORD = "admin";
     private static final String USERNAME = "admin";
 
     @Autowired
-    public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository) {
+    public DatabaseSeeder(UserRepository userRepository, ProductRepository productRepository,
+                          PurchasedProductRepository purchasedProductRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.purchasedProductRepository = purchasedProductRepository;
+        this.orderRepository = orderRepository;
         this.deleteAllAndInitializeAndSeedDatabase();
     }
 
@@ -34,6 +39,8 @@ public class DatabaseSeeder {
     }
 
     private void deleteAllAndInitialize() {
+        this.purchasedProductRepository.deleteAll();
+        this.orderRepository.eraseAll();
         this.userRepository.deleteAll();
         this.productRepository.deleteAll();
         LogManager.getLogger(this.getClass()).warn("------- Deleted All -----------");

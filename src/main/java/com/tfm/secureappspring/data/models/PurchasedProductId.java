@@ -1,3 +1,4 @@
+/*
 package com.tfm.secureappspring.data.models;
 
 import lombok.*;
@@ -40,4 +41,4 @@ public class PurchasedProductId implements Serializable {
         return Objects.hash(productId, orderId, id);
     }
 
-}
+}*/

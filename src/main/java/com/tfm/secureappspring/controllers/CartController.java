@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -101,7 +102,7 @@ public class CartController {
     }
 
     @PostMapping(value = "/Buy")
-    public String buy(HttpSession httpSession, RedirectAttributes redirectAttributes) {
+    public String buy(HttpSession httpSession, SessionStatus sessionStatus, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.getPrincipal().equals("anonymousUser") ||
                 auth.getAuthorities().stream().anyMatch(grantedAuthority ->
@@ -112,7 +113,7 @@ public class CartController {
         if (this.cart == null) {
             return "Cart/Index";
         }
-        List<Order> orders = this.orderRepository.findAll();
+        List<Order> orders = this.orderRepository.getAll();
         orders.sort(Comparator.comparing(Order::getId).reversed());
         Map<Integer, Product> shoppingCart = this.groupByIdAndTransformToMapWithPurchasedAmountOfEachProductStoredInFieldAmountOfProduct(this.cart);
         Order order = new Order();
@@ -121,24 +122,25 @@ public class CartController {
         order.setCost(0.0);
         User user = (User) auth.getPrincipal();
         order.setUser(this.userRepository.findUserByMail(user.getUsername()));
-        //this.orderRepository.save(order);
+        this.orderRepository.saveEntity(order.getId(), order.getCost(), order.getUser().getId());
         for (Map.Entry<Integer, Product> entry : shoppingCart.entrySet()) {
             if (this.productRepository.getById(entry.getKey()).getAmount() < entry.getValue().getAmount()) {
                 redirectAttributes.addFlashAttribute("errorAmount", "Amount selected of " +
                         entry.getValue().getName() + " is over the current stock.");
             }
-            Product p = this.productRepository.getById(entry.getKey());
+            Product product = this.productRepository.getById(entry.getKey());
             PurchasedProduct purchasedProduct = PurchasedProduct.builder()
-                    .product(p)
+                    .product(product)
                     .quantity(entry.getValue().getAmount())
                     .order(order)
                     .build();
             this.purchasedProductRepository.save(purchasedProduct);
-            p.setAmount(p.getAmount() - entry.getValue().getAmount());
-            this.productRepository.save(p);
+            product.setAmount(product.getAmount() - entry.getValue().getAmount());
+            this.productRepository.save(product);
             order.setCost(order.getCost() + entry.getValue().getAmount() * entry.getValue().getPrice());
         }
-        this.orderRepository.save(order);
+        this.orderRepository.updateCost(order.getCost(), order.getId());
+        sessionStatus.setComplete();
 
         return "redirect:/Cart/Index";
     }
