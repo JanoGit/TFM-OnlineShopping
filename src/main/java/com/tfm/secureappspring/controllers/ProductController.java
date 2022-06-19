@@ -10,10 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.persistence.EntityManager;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/Products")
@@ -25,8 +24,6 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    EntityManager entityManager;
 
     @GetMapping(value = "/Index")
     public String index(Model model) {
@@ -36,7 +33,7 @@ public class ProductController {
         return "Products/Index";
     }
 
-    /*@GetMapping(value = "/Details/{id}")
+    @GetMapping(value = "/Details/{id}")
     public String details(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
             redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
@@ -44,24 +41,13 @@ public class ProductController {
 
             return "redirect:/error";
         }
-
-        Product product = productRepository.getById(id);
-
-        if (product.getId() == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return "redirect:/error/404";
         }
         model.addAttribute("product", product);
 
         return "Products/Details";
-    }*/
-
-    @GetMapping(value = "/Details")
-    public String detailsSql(@RequestParam(required = false) String id, Model model) {
-        Object[] product = entityManager
-                .createNativeQuery("SELECT * FROM products WHERE id = " + id).getResultList().toArray();
-        model.addAttribute("product", product);
-
-        return "Products/DetailsSql";
     }
 
     @Secured("ROLE_ADMIN")
@@ -73,8 +59,8 @@ public class ProductController {
 
             return "redirect:/error";
         }
-        Product product = productRepository.getById(id);
-        if (product.getId() == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return "redirect:/error/404";
         }
         model.addAttribute("product", product);
@@ -115,8 +101,8 @@ public class ProductController {
 
             return "redirect:/error";
         }
-        Product product = productRepository.getById(id);
-        if (product.getId() == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return "redirect:/error/404";
         }
         model.addAttribute("product", product);
@@ -165,22 +151,11 @@ public class ProductController {
 
     @GetMapping(value = "Search")
     public String search(@RequestParam(required = false) String name, Model model) {
-        List<Object[]> productsArray = entityManager
-                .createNativeQuery("SELECT * FROM products WHERE name LIKE '%" + name + "%'").getResultList();
-        if (productsArray.isEmpty()) {
+        List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
+        if (products.isEmpty()) {
             model.addAttribute("product404", name);
 
             return "Products/Index";
-        }
-
-        List<Product> products = new ArrayList<>();
-        for (Object[] objects : productsArray) {
-            Product product = new Product();
-            product.setId((Integer) objects[0]);
-            product.setName((String) objects[1]);
-            product.setAmount((Integer) objects[2]);
-            product.setPrice((Double) objects[3]);
-            products.add(product);
         }
         model.addAttribute("products", products);
 
