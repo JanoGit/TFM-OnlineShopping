@@ -60,15 +60,15 @@ public class CartController {
 
             return "redirect:/error";
         }
-        Product product = productRepository.getById(id);
-        if (product.getId() == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return "redirect:/error/404";
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
         if (this.cart == null) {
             this.cart = new ArrayList<>();
         }
-        this.cart.add(product);
+        this.cart.add(product.get());
         model.addAttribute("cart", this.cart);
 
         return "redirect:/Products/Index";
@@ -82,8 +82,8 @@ public class CartController {
 
             return "redirect:/error";
         }
-        Product product = productRepository.getById(id);
-        if (product.getId() == null) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isEmpty()) {
             return "redirect:/error/404";
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
