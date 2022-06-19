@@ -46,7 +46,6 @@ public class ProductController {
         }
 
         Product product = productRepository.getById(id);
-        // TODO: product.getSupplyOrders() --> add to details
 
         if (product.getId() == null) {
             return "redirect:/error/404";

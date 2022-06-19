@@ -21,8 +21,6 @@
         <dd th:text="${product.amount}">Amount</dd>
         <dt>Price</dt>
         <dd th:text="${product.price}">Price</dd>
-        <!-- TODO: <dt sec:authorize="hasRole('ADMIN')">Supply Order</dt>
-              <dd sec:authorize="hasRole('ADMIN')" th:text="${product.supplyOrders}">Supply Orders</dd>-->
     </dl>
     <form id="delete_product" th:action="@{/Products/Delete/{id}(id = ${product.id})}" method="post" th:object="${product}">
         <div class="row container-fluid">

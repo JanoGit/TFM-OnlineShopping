@@ -34,7 +34,4 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<PurchasedProduct> purchasedProducts = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "products")
-    private Set<SupplyOrder> supplyOrders = new LinkedHashSet<>();
-
 }
