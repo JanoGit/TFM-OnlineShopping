@@ -6,6 +6,7 @@ import com.tfm.secureappspring.data.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -80,7 +81,7 @@ public class UserController {
         }
         User user = User.builder()
                 .mail(formData.get("register_user_mail").get(0))
-                .password(formData.get("register_user_password").get(0))
+                .password(new BCryptPasswordEncoder().encode(formData.get("register_user_password").get(0)))
                 .role(Role.CUSTOMER)
                 .userName(formData.get("register_user_name").get(0))
                 .enabled(true)

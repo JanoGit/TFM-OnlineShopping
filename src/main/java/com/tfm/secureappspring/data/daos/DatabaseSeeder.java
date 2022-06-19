@@ -5,6 +5,7 @@ import com.tfm.secureappspring.data.models.Role;
 import com.tfm.secureappspring.data.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -52,7 +53,7 @@ public class DatabaseSeeder {
             User user = User.builder()
                     .id(1)
                     .mail(ADMIN_MAIL)
-                    .password(ADMIN_PASSWORD) // new BCryptPasswordEncoder().encode(PASSWORD)
+                    .password(new BCryptPasswordEncoder().encode(ADMIN_PASSWORD))
                     .role(Role.ADMIN)
                     .userName(ADMIN_USERNAME)
                     .enabled(Boolean.TRUE)
@@ -75,7 +76,7 @@ public class DatabaseSeeder {
                 User.builder()
                         .id(2)
                         .mail("prueba@prueba.com")
-                        .password("prueba")
+                        .password(new BCryptPasswordEncoder().encode("prueba"))
                         .role(Role.CUSTOMER)
                         .userName("prueba")
                         .enabled(Boolean.TRUE)
