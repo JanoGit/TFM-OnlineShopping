@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -57,18 +58,19 @@ public class OrderController {
 
             return "redirect:/error";
         }
-        Order order = this.orderRepository.getOneById(id);
-        if (order.getId() == null) {
+        Optional<Order> order = this.orderRepository.getOneById(id);
+        if (order.isEmpty()) {
             return "redirect:/error/404";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetails =
                 (org.springframework.security.core.userdetails.User) auth.getPrincipal();
         User user = this.userRepository.findUserByMail(userDetails.getUsername());
-        if (!Objects.equals(user.getId(), order.getUser().getId()) && !user.getRole().toString().equalsIgnoreCase("ADMIN")) {
+        if (!Objects.equals(user.getId(), order.get().getUser().getId()) &&
+                !user.getRole().toString().equalsIgnoreCase("ADMIN")) {
             return "redirect:/Orders/Index";
         }
-        model.addAttribute("order", order);
+        model.addAttribute("order", order.get());
         return "Orders/Details";
     }
 }

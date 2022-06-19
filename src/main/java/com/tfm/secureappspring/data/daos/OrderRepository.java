@@ -7,13 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value = "SELECT * FROM tfmdb.order", nativeQuery = true)
     List<Order> getAll();
 
     @Query(value = "SELECT * FROM tfmdb.order WHERE id = ?", nativeQuery = true)
-    Order getOneById(Integer id);
+    Optional<Order> getOneById(Integer id);
 
     @Modifying
     @Transactional
