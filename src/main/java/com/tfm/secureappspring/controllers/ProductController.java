@@ -45,7 +45,7 @@ public class ProductController {
         if (product.isEmpty()) {
             return "redirect:/error/404";
         }
-        model.addAttribute("product", product);
+        model.addAttribute("product", product.get());
 
         return "Products/Details";
     }
@@ -63,7 +63,7 @@ public class ProductController {
         if (product.isEmpty()) {
             return "redirect:/error/404";
         }
-        model.addAttribute("product", product);
+        model.addAttribute("product", product.get());
 
         return "Products/Edit";
     }
@@ -105,7 +105,7 @@ public class ProductController {
         if (product.isEmpty()) {
             return "redirect:/error/404";
         }
-        model.addAttribute("product", product);
+        model.addAttribute("product", product.get());
 
         return "Products/Delete";
     }
