@@ -1,5 +1,6 @@
 package com.tfm.secureappspring;
 
+import com.tfm.secureappspring.data.models.ReCaptchaKeys;
 import com.tfm.secureappspring.data.models.ReCaptchaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

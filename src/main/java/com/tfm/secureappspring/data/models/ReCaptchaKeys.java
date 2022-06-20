@@ -1,4 +1,4 @@
-package com.tfm.secureappspring;
+package com.tfm.secureappspring.data.models;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

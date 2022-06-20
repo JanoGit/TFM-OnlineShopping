@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public class CustomAuthenticationToken extends UsernamePasswordAuthenticationToken{
 
-    private String captcha;
+    private final String captcha;
 
     public CustomAuthenticationToken(Object principal, Object credentials, String captcha) {
         super(principal, credentials);

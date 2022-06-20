@@ -20,8 +20,8 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
      */
     private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
 
-    private BCryptPasswordEncoder passwordEncoder;
-    private CustomUserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final CustomUserDetailsService userDetailsService;
 
     /**
      * The password used to perform

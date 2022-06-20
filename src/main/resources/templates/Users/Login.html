@@ -18,10 +18,9 @@
                      class="px-3" style="height: 3rem">Log In
             </p>
 
-            <div th:if="${param.error}">
+            <div th:if="${param.error}" style="margin-bottom: 20px">
                 Invalid mail and password or captcha not validated.
             </div>
-            <br>
 
             <form id="login_form" th:action="@{/Users/Login}" th:object="${formUser}" method="post">
                 <fieldset>

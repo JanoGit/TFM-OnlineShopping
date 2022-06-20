@@ -24,22 +24,15 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    // private final UserDetailsService userDetailsService;
     private final CustomUserDetailsService userDetailsService;
-    private final ObjectMapper objectMapper;
-
-    /*@Autowired
-    private BCryptPasswordEncoder passwordEncoder;*/
 
     @Autowired
-    public SecurityConfiguration(@Qualifier("tfm.users") CustomUserDetailsService userDetailsService, ObjectMapper objectMapper) {
+    public SecurityConfiguration(@Qualifier("tfm.users") CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.objectMapper = objectMapper;
     }
 
     @Autowired
     public void configure(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
-        //auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
         auth.jdbcAuthentication().dataSource(dataSource);
         auth.authenticationProvider(authProvider());
     }
@@ -66,50 +59,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/Users/Login")
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID");
-                /*.and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                .and()*/
     }
 
-    /*private void loginSuccessHandler(HttpServletRequest request, HttpServletResponse response, Authentication auth)
-            throws IOException {
-
-        response.setStatus(HttpStatus.OK.value());
-        objectMapper.writeValue(response.getWriter(), "Yayy you logged in!");
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
-
-    private void loginFailureHandler(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
-            throws IOException {
-
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        objectMapper.writeValue(response.getWriter(), "Nopity nop!");
-    }
-
-    private void logoutSuccessHandler(HttpServletRequest request, HttpServletResponse response, Authentication auth)
-            throws IOException {
-
-        response.setStatus(HttpStatus.OK.value());
-        objectMapper.writeValue(response.getWriter(), "Bye!");
-    }*/
 
     @Bean
     public CustomAuthenticationFilter authenticationFilter() throws Exception {
-        CustomAuthenticationFilter authenticationFilter =
-                new CustomAuthenticationFilter();
-        /*authenticationFilter.setAuthenticationSuccessHandler(this::loginSuccessHandler);
-        authenticationFilter.setAuthenticationFailureHandler(this::loginFailureHandler);*/
-        authenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/Users/Login", "POST"));
+        CustomAuthenticationFilter authenticationFilter = new CustomAuthenticationFilter();
+        authenticationFilter.setRequiresAuthenticationRequestMatcher(
+                new AntPathRequestMatcher("/Users/Login", "POST"));
         authenticationFilter.setAuthenticationManager(authenticationManagerBean());
         authenticationFilter.setAuthenticationFailureHandler(failureHandler());
         return authenticationFilter;
     }
 
     public AuthenticationProvider authProvider() {
-        /*DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder());*/
-
         return new CustomUserDetailsAuthenticationProvider(new BCryptPasswordEncoder(), this.userDetailsService);
     }
 
