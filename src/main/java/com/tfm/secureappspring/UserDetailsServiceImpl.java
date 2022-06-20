@@ -19,9 +19,11 @@ import java.util.List;
 @Service
 @Transactional
 @Qualifier("tfm.users")
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements CustomUserDetailsService {
 
     private final UserRepository userRepository;
+    @Autowired
+    ReCaptchaValidator reCaptchaValidator;
 
     @Autowired
     public UserDetailsServiceImpl(UserRepository userRepository) {
@@ -29,9 +31,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String mail) {
+    public UserDetails loadUserByUsernameAndCheckCaptcha(String mail, String captcha) {
         User user = userRepository.findByMail(mail)
                 .orElseThrow( () -> new UsernameNotFoundException("mail not found: " + mail));
+        if (!reCaptchaValidator.isValidCaptcha(captcha)) {
+            throw new UsernameNotFoundException("Please validate captcha");
+        }
         return this.userBuilder(user.getMail(), user.getPassword(), new Role[]{Role.AUTHENTICATED, user.getRole()});
     }
 

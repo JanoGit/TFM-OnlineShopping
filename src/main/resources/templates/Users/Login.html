@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Secure Virtual Shop - Login</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <section layout:fragment="content" class="container py-4 h-auto">
@@ -18,8 +19,9 @@
             </p>
 
             <div th:if="${param.error}">
-                Invalid mail and password.
+                Invalid mail and password or captcha not validated.
             </div>
+            <br>
 
             <form id="login_form" th:action="@{/Users/Login}" th:object="${formUser}" method="post">
                 <fieldset>
@@ -37,6 +39,11 @@
                                    style="width: 300px">
                         </label>
                     </div>
+                    <div class="g-recaptcha" th:attr="data-sitekey=${@reCaptchaKeys.getSite()}"
+                         style="margin-left: 36%">
+                    </div>
+                    <span id="captchaError" class="alert alert-danger col-sm-4"
+                          style="display:none"></span>
                     <div class="row container-fluid">
                         <input type="submit" name="Login" value="Login"
                                style="margin-left: 45%;margin-top: 5px;margin-bottom: 5px;width: 80px"/>

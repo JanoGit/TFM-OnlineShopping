@@ -1,5 +1,6 @@
 package com.tfm.secureappspring.controllers;
 
+import com.tfm.secureappspring.ReCaptchaValidator;
 import com.tfm.secureappspring.data.daos.UserRepository;
 import com.tfm.secureappspring.data.models.Role;
 import com.tfm.secureappspring.data.models.User;
@@ -22,6 +23,8 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private ReCaptchaValidator reCaptchaValidator;
 
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/Index")
@@ -59,7 +62,8 @@ public class UserController {
     // POST: /Users/Register
     @RequestMapping(value="/Register", method=RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String register(@RequestBody MultiValueMap<String, String> formData, RedirectAttributes redirectAttributes) {
+    public String register(@RequestBody MultiValueMap<String, String> formData, RedirectAttributes redirectAttributes,
+                           @RequestParam("g-recaptcha-response") String captcha) {
         if (formData.get("register_user_mail").get(0).isBlank() ||
                 formData.get("register_user_name").get(0).isBlank() ||
                 formData.get("register_user_password").get(0).isBlank() ||
@@ -76,6 +80,11 @@ public class UserController {
         }
         if (userRepository.findByMail(formData.get("register_user_mail").get(0)).isPresent()) {
             redirectAttributes.addFlashAttribute("userExists", "User already exists.");
+
+            return "redirect:/Users/Register";
+        }
+        if (!reCaptchaValidator.isValidCaptcha(captcha)) {
+            redirectAttributes.addFlashAttribute("captchaError", "Please validate captcha.");
 
             return "redirect:/Users/Register";
         }
