@@ -19,8 +19,7 @@ import java.util.Optional;
 public class ProductController {
     private final String HTTP_STATUS_KEY = "httpStatus";
     private final String HTTP_STATUS_400 = "400";
-    private final String HTTP_STATUS_REASON_PHRASE_KEY = "httpStatus.reasonPhrase";
-    private final String HTTP_STATUS_REASON_PHRASE_400 = "BAD REQUEST";
+    private final String HTTP_STATUS_404 = "404";
 
     @Autowired
     private ProductRepository productRepository;
@@ -36,14 +35,15 @@ public class ProductController {
     @GetMapping(value = "/Details/{id}")
     public String details(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         model.addAttribute("product", product.get());
 
@@ -54,14 +54,15 @@ public class ProductController {
     @GetMapping(value = "/Edit/{id}")
     public String edit(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         model.addAttribute("product", product.get());
 
@@ -73,14 +74,14 @@ public class ProductController {
     public String edit(@PathVariable Integer id,@Valid @ModelAttribute Product product, BindingResult bindingResult,
                        Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         if (product.getId() == null) {
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
 
-            return "redirect:/error/404";
+            return "redirect:/error";
         }
         if (bindingResult.hasErrors()) {
             model.addAttribute("product", product);
@@ -96,14 +97,15 @@ public class ProductController {
     @GetMapping(value = "/Delete/{id}")
     public String delete(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         model.addAttribute("product", product.get());
 
@@ -115,13 +117,14 @@ public class ProductController {
     public String delete(@PathVariable Integer id,@ModelAttribute Product product,
                          RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         if (product.getId() == null) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         productRepository.deleteById(id);
 
@@ -150,7 +153,13 @@ public class ProductController {
     }
 
     @GetMapping(value = "Search")
-    public String search(@RequestParam(required = false) String name, Model model) {
+    public String search(@RequestParam(required = false) String name, Model model,
+                         RedirectAttributes redirectAttributes) {
+        if (name == null) {
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
+
+            return "redirect:/error";
+        }
         List<Product> products = productRepository.findByNameContainingIgnoreCase(name);
         if (products.isEmpty()) {
             model.addAttribute("product404", name);

@@ -37,8 +37,7 @@ public class CartController {
     private OrderRepository orderRepository;
     private final String HTTP_STATUS_KEY = "httpStatus";
     private final String HTTP_STATUS_400 = "400";
-    private final String HTTP_STATUS_REASON_PHRASE_KEY = "httpStatus.reasonPhrase";
-    private final String HTTP_STATUS_REASON_PHRASE_400 = "BAD REQUEST";
+    private final String HTTP_STATUS_404 = "404";
 
     @GetMapping(value = "/Index")
     public String index(Model model, HttpSession httpSession) {
@@ -56,13 +55,14 @@ public class CartController {
     public String add(@PathVariable Integer id, Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         if (id == null) {
             redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
 
             return "redirect:/error";
         }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
         if (this.cart == null) {
@@ -77,18 +77,19 @@ public class CartController {
     @GetMapping(value = "/Remove/{id}")
     public String remove(@PathVariable Integer id, Model model, HttpSession httpSession, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
-        if (this.cart == null) {
-            return "redirect:/error";
+        if (cart == null || cart.isEmpty()) {
+            return "redirect:/Cart/Index";
         }
         for (Product p : this.cart) {
             if (Objects.equals(p.getId(), id)) {
@@ -111,7 +112,7 @@ public class CartController {
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
         if (this.cart == null) {
-            return "Cart/Index";
+            return "redirect:Cart/Index";
         }
         List<Order> orders = this.orderRepository.getAll();
         orders.sort(Comparator.comparing(Order::getId).reversed());

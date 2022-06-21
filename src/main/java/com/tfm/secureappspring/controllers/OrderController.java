@@ -28,6 +28,9 @@ public class OrderController {
     private OrderRepository orderRepository;
     @Autowired
     private UserRepository userRepository;
+    private final String HTTP_STATUS_KEY = "httpStatus";
+    private final String HTTP_STATUS_400 = "400";
+    private final String HTTP_STATUS_404 = "404";
 
     @Secured("ROLE_AUTHENTICATED")
     @GetMapping(value = "/Index")
@@ -53,14 +56,15 @@ public class OrderController {
     @GetMapping(value = "/Details/{id}")
     public String details(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
         if (id == null) {
-            redirectAttributes.addFlashAttribute("httpStatus", "400");
-            redirectAttributes.addFlashAttribute("httpStatus.reasonPhrase", "BAD REQUEST");
+            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";
         }
         Optional<Order> order = this.orderRepository.getOneById(id);
         if (order.isEmpty()) {
-            return "redirect:/error/404";
+            redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_404);
+
+            return "redirect:/error";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         org.springframework.security.core.userdetails.User userDetails =
