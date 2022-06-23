@@ -155,7 +155,7 @@ public class ProductController {
     @GetMapping(value = "Search")
     public String search(@RequestParam(required = false) String name, Model model,
                          RedirectAttributes redirectAttributes) {
-        if (name == null) {
+        if (name == null || (!name.isEmpty() && !name.matches("[a-zA-Z]"))) {
             redirectAttributes.addAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
 
             return "redirect:/error";

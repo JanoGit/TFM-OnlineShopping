@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .headers().httpStrictTransportSecurity().maxAgeInSeconds(3600).includeSubDomains(true);
+                .headers().httpStrictTransportSecurity().includeSubDomains(true);
         http
                 .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()

@@ -15,7 +15,6 @@ public class MyErrorController implements ErrorController {
     @GetMapping(value = "/error")
     public String handleError(HttpServletRequest request) {
 
-        String[] httpStatusRedirect = request.getQueryString().split("=");
         Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 
         Integer statusCode = null;
@@ -24,8 +23,11 @@ public class MyErrorController implements ErrorController {
         if (status != null) {
             statusCode = getStatusCode(status);
         }
-        if (httpStatusRedirect[1] != null) {
-            httpStatusCode = getHttpStatusCode(httpStatusRedirect[1]);
+        if (status == null && request.getQueryString() != null) {
+            String[] httpStatusRedirect = request.getQueryString().split("=");
+            if (httpStatusRedirect[1] != null) {
+                httpStatusCode = getHttpStatusCode(httpStatusRedirect[1]);
+            }
         }
 
             if(Objects.equals(statusCode, HttpStatus.NOT_FOUND.value()) || Objects.equals(httpStatusCode, 404)) {
