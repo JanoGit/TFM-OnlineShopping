@@ -67,7 +67,10 @@ public class DatabaseSeeder {
         LogManager.getLogger(this.getClass()).warn("------- Initial Load from JAVA -----------");
         Product[] products = {
                 Product.builder().id(1).name("Iphone").amount(50).price(840.35).build(),
-                Product.builder().id(2).name("Android").amount(25).price(532.85).build()
+                Product.builder().id(2).name("Android").amount(25).price(532.85).build(),
+                Product.builder().id(2).name("Keyboard").amount(80).price(25.00).build(),
+                Product.builder().id(2).name("Mouse").amount(100).price(35.55).build(),
+                Product.builder().id(2).name("Laptop").amount(60).price(1200.40).build()
         };
         this.productRepository.saveAll(Arrays.asList(products));
         LogManager.getLogger(this.getClass()).warn("        ------- products");

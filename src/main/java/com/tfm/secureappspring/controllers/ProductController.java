@@ -36,32 +36,13 @@ public class ProductController {
         return "Products/Index";
     }
 
-    /*@GetMapping(value = "/Details/{id}")
-    public String details(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
-        if (id == null) {
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_KEY, HTTP_STATUS_400);
-            redirectAttributes.addFlashAttribute(HTTP_STATUS_REASON_PHRASE_KEY, HTTP_STATUS_REASON_PHRASE_400);
-
-            return "redirect:/error";
-        }
-
-        Product product = productRepository.getById(id);
-
-        if (product.getId() == null) {
-            return "redirect:/error/404";
-        }
-        model.addAttribute("product", product);
-
-        return "Products/Details";
-    }*/
-
     @GetMapping(value = "/Details")
-    public String detailsSql(@RequestParam(required = false) String id, Model model) {
+    public String details(@RequestParam(required = false) String id, Model model) {
         Object[] product = entityManager
                 .createNativeQuery("SELECT * FROM products WHERE id = " + id).getResultList().toArray();
         model.addAttribute("product", product);
 
-        return "Products/DetailsSql";
+        return "Products/Details";
     }
 
     @Secured("ROLE_ADMIN")
