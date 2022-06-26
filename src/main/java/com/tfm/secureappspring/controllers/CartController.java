@@ -111,7 +111,7 @@ public class CartController {
             return "redirect:/Users/Login";
         }
         this.cart = (List<Product>) httpSession.getAttribute("cart");
-        if (this.cart == null) {
+        if (this.cart == null || this.cart.isEmpty()) {
             return "redirect:Cart/Index";
         }
         List<Order> orders = this.orderRepository.getAll();

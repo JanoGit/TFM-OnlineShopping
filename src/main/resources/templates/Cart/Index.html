@@ -29,7 +29,6 @@
       <td th:text="${entry.value.name}">Name</td>
       <td th:text="${entry.value.price}">Price</td>
       <td th:text="${entry.value.amount}">Amount</td>
-      <!--<td><a th:href="@{/Products/Details/{id}(id = ${product.id})}">Details</a></td>-->
       <td><a th:href="@{/Products/Details(id = ${entry.value.id})}">Details</a></td>
       <td><a th:href="@{/Cart/Remove/{id}(id = ${entry.value.id})}">Remove</a></td>
     </tr>
