@@ -13,13 +13,12 @@ import java.util.Set;
 @Getter
 @Setter
 @RequiredArgsConstructor
-//@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
     @NotBlank(message = "Product name has to be set")

@@ -24,7 +24,7 @@
   <hr>
   <p style="margin-left: 40px">
     <a th:href="@{~/Products/Index}">Product Index</a>
-    <a sec:authorize="hasRole('ADMIN')" th:href="@{/Products/Edit/{id}(id = ${product[0]})}"> | Edit/Delete Product</a>
+    <a th:each="p : ${product}" sec:authorize="hasRole('ADMIN')" th:href="@{/Products/Edit/{id}(id = ${p[0]})}"> | Edit/Delete Product</a>
   </p>
 </section>
 </html>

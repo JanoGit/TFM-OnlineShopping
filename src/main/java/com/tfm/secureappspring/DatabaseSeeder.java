@@ -1,5 +1,9 @@
-package com.tfm.secureappspring.data.daos;
+package com.tfm.secureappspring;
 
+import com.tfm.secureappspring.data.daos.OrderRepository;
+import com.tfm.secureappspring.data.daos.ProductRepository;
+import com.tfm.secureappspring.data.daos.PurchasedProductRepository;
+import com.tfm.secureappspring.data.daos.UserRepository;
 import com.tfm.secureappspring.data.models.Product;
 import com.tfm.secureappspring.data.models.Role;
 import com.tfm.secureappspring.data.models.User;
@@ -68,9 +72,9 @@ public class DatabaseSeeder {
         Product[] products = {
                 Product.builder().id(1).name("Iphone").amount(50).price(840.35).build(),
                 Product.builder().id(2).name("Android").amount(25).price(532.85).build(),
-                Product.builder().id(2).name("Keyboard").amount(80).price(25.00).build(),
-                Product.builder().id(2).name("Mouse").amount(100).price(35.55).build(),
-                Product.builder().id(2).name("Laptop").amount(60).price(1200.40).build()
+                Product.builder().id(3).name("Keyboard").amount(80).price(25.00).build(),
+                Product.builder().id(4).name("Mouse").amount(100).price(35.55).build(),
+                Product.builder().id(5).name("Laptop").amount(60).price(1200.40).build()
         };
         this.productRepository.saveAll(Arrays.asList(products));
         LogManager.getLogger(this.getClass()).warn("        ------- products");
