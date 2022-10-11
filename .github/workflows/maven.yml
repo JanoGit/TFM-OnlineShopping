@@ -16,18 +16,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 11
+    - name: Set up JDK 11 & Google secret variables
       uses: actions/setup-java@v3
       with:
         java-version: '11'
         distribution: 'temurin'
         cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
-    
-    - name: Google Recaptcha Key Secret
       env: 
         GOOGLE_RECAPTCHA_KEY_SECRET: ${{ secrets.GOOGLE_RECAPTCHA_KEY_SECRET }}
-    - name: Google Recaptcha Key Site
-      env: 
         GOOGLE_RECAPTCHA_KEY_SITE: ${{ secrets.GOOGLE_RECAPTCHA_KEY_SITE }}
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
